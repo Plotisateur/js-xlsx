@@ -7,6 +7,7 @@ Parser and writer for various spreadsheet formats.  Pure-JS cleanroom implementa
 It is extended to enable cell formats to be read from and written to .xlsx workbooks.
 The intent is to provide a temporary means of using these features in practice, and ultimately to merge this into the primary project.
 Report any issues to https://github.com/protobi/js-xlsx/issues.
+**NOTE AGAIN:** This is a fork of a fork for adding functionnality such as compression, freezed header and autofilter that have been (why ?) removed from the original project
 
 For those contributing to this fork:
 * `master` is the main branch, which follows the original repo to enable a future pull request.
