@@ -626,7 +626,7 @@ function eval_fmt(fmt, v, opts, flen) {
 				out[out.length] = {t:'T', v:v}; ++i; break;
 			case 'B': case 'b':
 				if(fmt[i+1] === "1" || fmt[i+1] === "2") {
-          if(dt==null) { dt=parse_date_code(v, opts, fmt[i+1] === "2"); if(dt==null) return ""; }
+	   if(dt==null) { dt=parse_date_code(v, opts, fmt[i+1] === "2"); if(dt==null) return ""; }
 					out[out.length] = {t:'X', v:fmt.substr(i,2)}; lst = c; i+=2; break;
 				}
 				/* falls through */
@@ -643,8 +643,8 @@ function eval_fmt(fmt, v, opts, flen) {
 			case 'A':
 				q={t:c, v:"A"};
 				if(dt==null) dt=parse_date_code(v, opts);
-        if(fmt.substr(i, 3) === "A/P") { if(dt!=null) q.v = dt.H >= 12 ? "P" : "A"; q.t = 'T'; hr='h';i+=3;}
-        else if(fmt.substr(i,5) === "AM/PM") { if(dt!=null) q.v = dt.H >= 12 ? "PM" : "AM"; q.t = 'T'; i+=5; hr='h'; }
+	 if(fmt.substr(i, 3) === "A/P") { if(dt!=null) q.v = dt.H >= 12 ? "P" : "A"; q.t = 'T'; hr='h';i+=3;}
+	 else if(fmt.substr(i,5) === "AM/PM") { if(dt!=null) q.v = dt.H >= 12 ? "PM" : "AM"; q.t = 'T'; i+=5; hr='h'; }
 				else { q.t = "t"; ++i; }
 				if(dt==null && q.t === 'T') return "";
 				out[out.length] = q; lst = c; break;
@@ -1201,8 +1201,8 @@ function read_date(blob, offset) {
 
 var fs;
 function readFileSync(filename, options) {
-	if(fs === undefined) fs = require('fs');
-	return parse(fs.readFileSync(filename), options);
+	// if(fs === undefined) fs = require('fs');
+	// return parse(fs.readFileSync(filename), options);
 }
 
 function readSync(blob, options) {
@@ -1343,7 +1343,6 @@ if (typeof exports !== 'undefined') {
 	if (typeof module !== 'undefined' && module.exports) {
 		if(has_buf && typeof jszip === 'undefined') jszip = require('js'+'zip');
 		if(typeof jszip === 'undefined') jszip = require('./js'+'zip').JSZip;
-		_fs = require('f'+'s');
 	}
 }
 var attregexg=/([\w:]+)=((?:")([^"]*)(?:")|(?:')([^']*)(?:'))/g;
@@ -2620,7 +2619,7 @@ function write_core_props(cp, opts) {
     if(cp.CreatedDate != null) cp_doit("dcterms:created", typeof cp.CreatedDate === "string" ? cp.CreatedDate : write_w3cdtf(cp.CreatedDate, opts.WTF), {"xsi:type":"dcterms:W3CDTF"}, o, p);
     if(cp.ModifiedDate != null) cp_doit("dcterms:modified", typeof cp.ModifiedDate === "string" ? cp.ModifiedDate : write_w3cdtf(cp.ModifiedDate, opts.WTF), {"xsi:type":"dcterms:W3CDTF"}, o, p);
 
-  	for(var i = 0; i != CORE_PROPS.length; ++i) { var f = CORE_PROPS[i]; cp_doit(f[0], cp[f[1]], null, o, p); }
+	for(var i = 0; i != CORE_PROPS.length; ++i) { var f = CORE_PROPS[i]; cp_doit(f[0], cp[f[1]], null, o, p); }
   }
   if(o.length>2){ o[o.length] = ('</cp:coreProperties>'); o[1]=o[1].replace("/>",">"); }
   return o.join("");
@@ -4658,63 +4657,63 @@ function parse_fills(t, opts) {
       case '<fills':
       case '<fills>':
       case '</fills>':
-        break;
+	 break;
 
       /* 18.8.20 fill CT_Fill */
       case '<fill>':
-        break;
+	 break;
       case '</fill>':
-        styles.Fills.push(fill);
-        fill = {};
-        break;
+	 styles.Fills.push(fill);
+	 fill = {};
+	 break;
 
       /* 18.8.32 patternFill CT_PatternFill */
       case '<patternFill':
-        if (y.patternType) fill.patternType = y.patternType;
-        break;
+	 if (y.patternType) fill.patternType = y.patternType;
+	 break;
       case '<patternFill/>':
       case '</patternFill>':
-        break;
+	 break;
 
       /* 18.8.3 bgColor CT_Color */
       case '<bgColor':
-        if (!fill.bgColor) fill.bgColor = {};
-        if (y.indexed) fill.bgColor.indexed = parseInt(y.indexed, 10);
-        if (y.theme) fill.bgColor.theme = parseInt(y.theme, 10);
-        if (y.tint) fill.bgColor.tint = parseFloat(y.tint);
+	 if (!fill.bgColor) fill.bgColor = {};
+	 if (y.indexed) fill.bgColor.indexed = parseInt(y.indexed, 10);
+	 if (y.theme) fill.bgColor.theme = parseInt(y.theme, 10);
+	 if (y.tint) fill.bgColor.tint = parseFloat(y.tint);
 
 
-        if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
-          fill.bgColor.rgb = rgb_tint(themes.themeElements.clrScheme[fill.bgColor.theme].rgb, fill.bgColor.tint || 0);
-          if (opts.WTF) fill.bgColor.raw_rgb = rgb_tint(themes.themeElements.clrScheme[fill.bgColor.theme].rgb,0);
-        }
-        /* Excel uses ARGB strings */
-        if (y.rgb) fill.bgColor.rgb = y.rgb;//.substring(y.rgb.length - 6);
-        break;
+	 if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
+	   fill.bgColor.rgb = rgb_tint(themes.themeElements.clrScheme[fill.bgColor.theme].rgb, fill.bgColor.tint || 0);
+	   if (opts.WTF) fill.bgColor.raw_rgb = rgb_tint(themes.themeElements.clrScheme[fill.bgColor.theme].rgb,0);
+	 }
+	 /* Excel uses ARGB strings */
+	 if (y.rgb) fill.bgColor.rgb = y.rgb;//.substring(y.rgb.length - 6);
+	 break;
       case '<bgColor/>':
       case '</bgColor>':
-        break;
+	 break;
 
       /* 18.8.19 fgColor CT_Color */
       case '<fgColor':
-        if (!fill.fgColor) fill.fgColor = {};
-        if (y.theme) fill.fgColor.theme = parseInt(y.theme, 10);
-        if (y.tint) fill.fgColor.tint = parseFloat(y.tint);
+	 if (!fill.fgColor) fill.fgColor = {};
+	 if (y.theme) fill.fgColor.theme = parseInt(y.theme, 10);
+	 if (y.tint) fill.fgColor.tint = parseFloat(y.tint);
 
-        if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
-          fill.fgColor.rgb = rgb_tint(themes.themeElements.clrScheme[fill.fgColor.theme].rgb, fill.fgColor.tint || 0);
-          if (opts.WTF) fill.fgColor.raw_rgb = rgb_tint(themes.themeElements.clrScheme[fill.fgColor.theme].rgb,0);
-        }
+	 if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
+	   fill.fgColor.rgb = rgb_tint(themes.themeElements.clrScheme[fill.fgColor.theme].rgb, fill.fgColor.tint || 0);
+	   if (opts.WTF) fill.fgColor.raw_rgb = rgb_tint(themes.themeElements.clrScheme[fill.fgColor.theme].rgb,0);
+	 }
 
-        /* Excel uses ARGB strings */
-        if (y.rgb) fill.fgColor.rgb = y.rgb;//.substring(y.rgb.length - 6);
-        break;
+	 /* Excel uses ARGB strings */
+	 if (y.rgb) fill.fgColor.rgb = y.rgb;//.substring(y.rgb.length - 6);
+	 break;
       case '<fgColor/>':
       case '</fgColor>':
-        break;
+	 break;
 
       default:
-        if (opts.WTF) throw 'unrecognized ' + y[0] + ' in fills';
+	 if (opts.WTF) throw 'unrecognized ' + y[0] + ' in fills';
     }
   });
 }
@@ -4729,70 +4728,70 @@ function parse_fonts(t, opts) {
       case '<fonts':
       case  '<fonts>':
       case '</fonts>':
-        break;
+	 break;
       case '<font':
-        break;
+	 break;
       case '</font>':
-        styles.Fonts.push(font);
-        ;
-        font = {};
-        break;
+	 styles.Fonts.push(font);
+	 ;
+	 font = {};
+	 break;
 
       case '<name':
-        if (y.val) font.name = y.val;
-        break;
+	 if (y.val) font.name = y.val;
+	 break;
       case '<name/>':
       case '</name>':
-        break;
+	 break;
 
 
       case '<b/>':
-        font.bold = true;
-        break;
+	 font.bold = true;
+	 break;
       case '<u/>':
-        font.underline = true;
-        break;
+	 font.underline = true;
+	 break;
       case '<i/>':
-        font.italic = true;
-        break;
+	 font.italic = true;
+	 break;
       case '<strike/>':
-        font.strike = true;
-        break;
+	 font.strike = true;
+	 break;
       case '<outline/>':
-        font.outline = true;
-        break;
+	 font.outline = true;
+	 break;
       case '<shadow/>':
-        font.shadow = true;
-        break;
+	 font.shadow = true;
+	 break;
 
 
       case '<sz':
-        if (y.val) font.sz = y.val;
-        break;
+	 if (y.val) font.sz = y.val;
+	 break;
       case '<sz/>':
       case '</sz>':
-        break;
+	 break;
 
       case '<vertAlign':
-        if (y.val) font.vertAlign = y.val;
-        break;
+	 if (y.val) font.vertAlign = y.val;
+	 break;
       case '<vertAlign/>':
       case '</vertAlign>':
-        break;
+	 break;
 
 
       case '<color':
-        if (!font.color) font.color = {};
-        if (y.theme) font.color.theme = y.theme;
-        if (y.tint) font.color.tint = y.tint;
-        if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
-          font.color.rgb = rgb_tint(themes.themeElements.clrScheme[font.color.theme].rgb, font.color.tint || 0);
-        }
-        if (y.rgb) font.color.rgb = y.rgb;
-        break;
+	 if (!font.color) font.color = {};
+	 if (y.theme) font.color.theme = y.theme;
+	 if (y.tint) font.color.tint = y.tint;
+	 if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
+	   font.color.rgb = rgb_tint(themes.themeElements.clrScheme[font.color.theme].rgb, font.color.tint || 0);
+	 }
+	 if (y.rgb) font.color.rgb = y.rgb;
+	 break;
       case '<color/>':
       case '</color>':
-        break;
+	 break;
     }
   });
 }
@@ -4806,66 +4805,66 @@ function parse_borders(t, opts) {
       case '<borders':
       case  '<borders>':
       case '</borders>':
-        break;
+	 break;
       case '<border':
       case '<border>':
-        border = {};
-        if (y.diagonalUp) { border.diagonalUp = y.diagonalUp; }
-        if (y.diagonalDown) { border.diagonalDown = y.diagonalDown; }
-        styles.Borders.push(border);
+	 border = {};
+	 if (y.diagonalUp) { border.diagonalUp = y.diagonalUp; }
+	 if (y.diagonalDown) { border.diagonalDown = y.diagonalDown; }
+	 styles.Borders.push(border);
 
-        break;
-        break;
+	 break;
+	 break;
       case '</border>':
-        break;
+	 break;
 
       case '<left':
-        sub_border = border.left = {};
-        if (y.style) {
-          sub_border.style = y.style;
-        }
-        break;
+	 sub_border = border.left = {};
+	 if (y.style) {
+	   sub_border.style = y.style;
+	 }
+	 break;
       case '<right':
-        sub_border = border.right = {};
-        if (y.style) {
-          sub_border.style = y.style;
-        }
-        break;
+	 sub_border = border.right = {};
+	 if (y.style) {
+	   sub_border.style = y.style;
+	 }
+	 break;
       case '<top':
-        sub_border = border.top = {};
-        if (y.style) {
-          sub_border.style = y.style;
-        }
-        break;
+	 sub_border = border.top = {};
+	 if (y.style) {
+	   sub_border.style = y.style;
+	 }
+	 break;
       case '<bottom':
-        sub_border = border.bottom = {};
-        if (y.style) {
-          sub_border.style = y.style;
-        }
-        break;
+	 sub_border = border.bottom = {};
+	 if (y.style) {
+	   sub_border.style = y.style;
+	 }
+	 break;
       case '<diagonal':
-        sub_border = border.diagonal = {};
-        if (y.style) {
-          sub_border.style = y.style;
-        }
-        break;
+	 sub_border = border.diagonal = {};
+	 if (y.style) {
+	   sub_border.style = y.style;
+	 }
+	 break;
 
       case '<color':
-        sub_border.color = {};
-        if (y.theme) sub_border.color.theme = y.theme;
-        if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
-          sub_border.color.rgb = rgb_tint(themes.themeElements.clrScheme[sub_border.color.theme].rgb, sub_border.color.tint || 0);
-        }
+	 sub_border.color = {};
+	 if (y.theme) sub_border.color.theme = y.theme;
+	 if (y.theme && themes.themeElements && themes.themeElements.clrScheme) {
+	   sub_border.color.rgb = rgb_tint(themes.themeElements.clrScheme[sub_border.color.theme].rgb, sub_border.color.tint || 0);
+	 }
 
-        if (y.tint) sub_border.color.tint = y.tint;
-        if (y.rgb) sub_border.color.rgb = y.rgb;
-        if (y.auto) sub_border.color.auto = y.auto;
-        break;
+	 if (y.tint) sub_border.color.tint = y.tint;
+	 if (y.rgb) sub_border.color.rgb = y.rgb;
+	 if (y.auto) sub_border.color.auto = y.auto;
+	 break;
       case '<name/>':
       case '</name>':
-        break;
+	 break;
       default:
-        break;
+	 break;
     }
   });
 
@@ -4884,16 +4883,16 @@ function parse_numFmts(t, opts) {
       case '</numFmts>':
       case '<numFmts/>':
       case '<numFmts>':
-        break;
+	 break;
       case '<numFmt':
       {
-        var f = unescapexml(utf8read(y.formatCode)), j = parseInt(y.numFmtId, 10);
-        styles.NumberFmt[j] = f;
-        if (j > 0) SSF.load(f, j);
+	 var f = unescapexml(utf8read(y.formatCode)), j = parseInt(y.numFmtId, 10);
+	 styles.NumberFmt[j] = f;
+	 if (j > 0) SSF.load(f, j);
       }
-        break;
+	 break;
       default:
-        if (opts.WTF) throw 'unrecognized ' + y[0] + ' in numFmts';
+	 if (opts.WTF) throw 'unrecognized ' + y[0] + ' in numFmts';
     }
   }
 }
@@ -4926,46 +4925,46 @@ function parse_cellXfs(t, opts) {
       case '<cellXfs>':
       case '<cellXfs/>':
       case '</cellXfs>':
-        break;
+	 break;
 
       /* 18.8.45 xf CT_Xf */
       case '<xf':
-          xf = y;
-          delete xf[0];
-        delete y[0];
-        if (xf.numFmtId) xf.numFmtId = parseInt(xf.numFmtId, 10);
-        if (xf.fillId) xf.fillId = parseInt(xf.fillId, 10);
-        styles.CellXf.push(xf);
-        break;
+	   xf = y;
+	   delete xf[0];
+	 delete y[0];
+	 if (xf.numFmtId) xf.numFmtId = parseInt(xf.numFmtId, 10);
+	 if (xf.fillId) xf.fillId = parseInt(xf.fillId, 10);
+	 styles.CellXf.push(xf);
+	 break;
       case '</xf>':
-        break;
+	 break;
 
       /* 18.8.1 alignment CT_CellAlignment */
       case '<alignment':
       case '<alignment/>':
-        var alignment = {}
-          if (y.vertical) { alignment.vertical = y.vertical;}
-          if (y.horizontal) { alignment.horizontal = y.horizontal;}
-          if (y.textRotation != undefined) { alignment.textRotation = y.textRotation; }
-          if (y.indent) { alignment.indent = y.indent; }
-          if (y.wrapText) { alignment.wrapText = y.wrapText; }
-          xf.alignment = alignment;
+	 var alignment = {}
+	   if (y.vertical) { alignment.vertical = y.vertical;}
+	   if (y.horizontal) { alignment.horizontal = y.horizontal;}
+	   if (y.textRotation != undefined) { alignment.textRotation = y.textRotation; }
+	   if (y.indent) { alignment.indent = y.indent; }
+	   if (y.wrapText) { alignment.wrapText = y.wrapText; }
+	   xf.alignment = alignment;
 
-        break;
+	 break;
 
       /* 18.8.33 protection CT_CellProtection */
       case '<protection':
       case '</protection>':
       case '<protection/>':
-        break;
+	 break;
 
       case '<extLst':
       case '</extLst>':
-        break;
+	 break;
       case '<ext':
-        break;
+	 break;
       default:
-        if (opts.WTF) throw 'unrecognized ' + y[0] + ' in cellXfs';
+	 if (opts.WTF) throw 'unrecognized ' + y[0] + ' in cellXfs';
     }
   });
 }
@@ -7545,6 +7544,7 @@ var sheetdataregex = /<(?:\w+:)?sheetData>([^\u2603]*)<\/(?:\w+:)?sheetData>/;
 var hlinkregex = /<hyperlink[^>]*\/>/g;
 var dimregex = /"(\w*:\w*)"/;
 var colregex = /<col[^>]*\/>/g;
+var afregex = /<(?:\w:)?autoFilter[^>]*([\/]|>([\s\S]*)<\/(?:\w:)?autoFilter)>/g;
 /* 18.3 Worksheets */
 function parse_ws_xml(data, opts, rels) {
   if (!data) return data;
@@ -7557,6 +7557,10 @@ function parse_ws_xml(data, opts, rels) {
     var ref = data.substr(ridx, 50).match(dimregex);
     if (ref != null) parse_ws_xml_dim(s, ref[1]);
   }
+
+  /* 18.3.1.2  autoFilter CT_AutoFilter */
+  var afilter = data2.match(afregex);
+  if(afilter) s['!autofilter'] = parse_ws_xml_autofilter(afilter[0]);
 
   /* 18.3.1.55 mergeCells CT_MergeCells */
   var mergecells = [];
@@ -7681,6 +7685,10 @@ function write_ws_xml_cols(ws, cols) {
   return o.join("");
 }
 
+function write_ws_xml_autofilter(data) {
+	return writextag("autoFilter", null, {ref:data.ref});
+}
+
 function write_ws_xml_cell(cell, ref, ws, opts, idx, wb) {
   if (cell.v === undefined && cell.s === undefined) return "";
   var vv = "";
@@ -7698,9 +7706,9 @@ function write_ws_xml_cell(cell, ref, ws, opts, idx, wb) {
     case 'd':
       if (opts.cellDates) vv = new Date(cell.v).toISOString();
       else {
-        cell.t = 'n';
-        vv = '' + (cell.v = datenum(cell.v));
-        if (typeof cell.z === 'undefined') cell.z = SSF._table[14];
+	 cell.t = 'n';
+	 vv = '' + (cell.v = datenum(cell.v));
+	 if (typeof cell.z === 'undefined') cell.z = SSF._table[14];
       }
       break;
     default:
@@ -7725,9 +7733,9 @@ function write_ws_xml_cell(cell, ref, ws, opts, idx, wb) {
       break;
     default:
       if (opts.bookSST) {
-        v = writetag('v', '' + get_sst_id(opts.Strings, cell.v));
-        o.t = "s";
-        break;
+	 v = writetag('v', '' + get_sst_id(opts.Strings, cell.v));
+	 o.t = "s";
+	 break;
       }
       o.t = "str";
       break;
@@ -7768,96 +7776,96 @@ var parse_ws_xml_data = (function parse_ws_xml_data_factory() {
       /* 18.3.1.4 c CT_Cell */
       cells = x.substr(ri).split(cellregex);
       for (ri = typeof tag.r === 'undefined' ? 0 : 1; ri != cells.length; ++ri) {
-        x = cells[ri].trim();
-        if (x.length === 0) continue;
-        cref = x.match(rregex);
-        idx = ri;
-        i = 0;
-        cc = 0;
-        x = "<c " + (x.substr(0, 1) == "<" ? ">" : "") + x;
-        if (cref !== null && cref.length === 2) {
-          idx = 0;
-          d = cref[1];
-          for (i = 0; i != d.length; ++i) {
-            if ((cc = d.charCodeAt(i) - 64) < 1 || cc > 26) break;
-            idx = 26 * idx + cc;
-          }
-          --idx;
-          tagc = idx;
-        } else ++tagc;
-        for (i = 0; i != x.length; ++i) if (x.charCodeAt(i) === 62) break;
-        ++i;
-        tag = parsexmltag(x.substr(0, i), true);
-        if (!tag.r) tag.r = utils.encode_cell({r: tagr - 1, c: tagc});
-        d = x.substr(i);
-        p = {t: ""};
+	 x = cells[ri].trim();
+	 if (x.length === 0) continue;
+	 cref = x.match(rregex);
+	 idx = ri;
+	 i = 0;
+	 cc = 0;
+	 x = "<c " + (x.substr(0, 1) == "<" ? ">" : "") + x;
+	 if (cref !== null && cref.length === 2) {
+	   idx = 0;
+	   d = cref[1];
+	   for (i = 0; i != d.length; ++i) {
+	     if ((cc = d.charCodeAt(i) - 64) < 1 || cc > 26) break;
+	     idx = 26 * idx + cc;
+	   }
+	   --idx;
+	   tagc = idx;
+	 } else ++tagc;
+	 for (i = 0; i != x.length; ++i) if (x.charCodeAt(i) === 62) break;
+	 ++i;
+	 tag = parsexmltag(x.substr(0, i), true);
+	 if (!tag.r) tag.r = utils.encode_cell({r: tagr - 1, c: tagc});
+	 d = x.substr(i);
+	 p = {t: ""};
 
-        if ((cref = d.match(match_v)) !== null && cref[1] !== '') p.v = unescapexml(cref[1]);
-        if (opts.cellFormula && (cref = d.match(match_f)) !== null) p.f = unescapexml(cref[1]);
+	 if ((cref = d.match(match_v)) !== null && cref[1] !== '') p.v = unescapexml(cref[1]);
+	 if (opts.cellFormula && (cref = d.match(match_f)) !== null) p.f = unescapexml(cref[1]);
 
-        /* SCHEMA IS ACTUALLY INCORRECT HERE.  IF A CELL HAS NO T, EMIT "" */
-        if (tag.t === undefined && tag.s === undefined && p.v === undefined) {
-          if (!opts.sheetStubs) continue;
-          p.t = "stub";
-        }
-        else p.t = tag.t || "n";
-        if (guess.s.c > idx) guess.s.c = idx;
-        if (guess.e.c < idx) guess.e.c = idx;
-        /* 18.18.11 t ST_CellType */
-        switch (p.t) {
-          case 'n':
-            p.v = parseFloat(p.v);
-            if (isNaN(p.v)) p.v = "" // we don't want NaN if p.v is null
-            break;
-          case 's':
-            // if (!p.hasOwnProperty('v')) continue;
-            sstr = strs[parseInt(p.v, 10)];
-            p.v = sstr.t;
-            p.r = sstr.r;
-            if (opts.cellHTML) p.h = sstr.h;
-            break;
-          case 'str':
-            p.t = "s";
-            p.v = (p.v != null) ? utf8read(p.v) : '';
-            if (opts.cellHTML) p.h = p.v;
-            break;
-          case 'inlineStr':
-            cref = d.match(isregex);
-            p.t = 's';
-            if (cref !== null) {
-              sstr = parse_si(cref[1]);
-              p.v = sstr.t;
-            } else p.v = "";
-            break; // inline string
-          case 'b':
-            p.v = parsexmlbool(p.v);
-            break;
-          case 'd':
-            if (!opts.cellDates) {
-              p.v = datenum(p.v);
-              p.t = 'n';
-            }
-            break;
-            /* error string in .v, number in .v */
-          case 'e':
-            p.w = p.v;
-            p.v = RBErr[p.v];
-            break;
-        }
-        /* formatting */
-        fmtid = fillid = 0;
-        if (do_format && tag.s !== undefined) {
-          cf = styles.CellXf[tag.s];
-          if (opts.cellStyles) {
-            p.s = get_cell_style_csf(cf)
-          }
-          if (cf != null) {
-            if (cf.numFmtId != null) fmtid = cf.numFmtId;
-            if (opts.cellStyles && cf.fillId != null) fillid = cf.fillId;
-          }
-        }
-        safe_format(p, fmtid, fillid, opts);
-        s[tag.r] = p;
+	 /* SCHEMA IS ACTUALLY INCORRECT HERE.  IF A CELL HAS NO T, EMIT "" */
+	 if (tag.t === undefined && tag.s === undefined && p.v === undefined) {
+	   if (!opts.sheetStubs) continue;
+	   p.t = "stub";
+	 }
+	 else p.t = tag.t || "n";
+	 if (guess.s.c > idx) guess.s.c = idx;
+	 if (guess.e.c < idx) guess.e.c = idx;
+	 /* 18.18.11 t ST_CellType */
+	 switch (p.t) {
+	   case 'n':
+	     p.v = parseFloat(p.v);
+	     if (isNaN(p.v)) p.v = "" // we don't want NaN if p.v is null
+	     break;
+	   case 's':
+	     // if (!p.hasOwnProperty('v')) continue;
+	     sstr = strs[parseInt(p.v, 10)];
+	     p.v = sstr.t;
+	     p.r = sstr.r;
+	     if (opts.cellHTML) p.h = sstr.h;
+	     break;
+	   case 'str':
+	     p.t = "s";
+	     p.v = (p.v != null) ? utf8read(p.v) : '';
+	     if (opts.cellHTML) p.h = p.v;
+	     break;
+	   case 'inlineStr':
+	     cref = d.match(isregex);
+	     p.t = 's';
+	     if (cref !== null) {
+		sstr = parse_si(cref[1]);
+		p.v = sstr.t;
+	     } else p.v = "";
+	     break; // inline string
+	   case 'b':
+	     p.v = parsexmlbool(p.v);
+	     break;
+	   case 'd':
+	     if (!opts.cellDates) {
+		p.v = datenum(p.v);
+		p.t = 'n';
+	     }
+	     break;
+	     /* error string in .v, number in .v */
+	   case 'e':
+	     p.w = p.v;
+	     p.v = RBErr[p.v];
+	     break;
+	 }
+	 /* formatting */
+	 fmtid = fillid = 0;
+	 if (do_format && tag.s !== undefined) {
+	   cf = styles.CellXf[tag.s];
+	   if (opts.cellStyles) {
+	     p.s = get_cell_style_csf(cf)
+	   }
+	   if (cf != null) {
+	     if (cf.numFmtId != null) fmtid = cf.numFmtId;
+	     if (opts.cellStyles && cf.fillId != null) fillid = cf.fillId;
+	   }
+	 }
+	 safe_format(p, fmtid, fillid, opts);
+	 s[tag.r] = p;
       }
     }
   };
@@ -7938,6 +7946,7 @@ function write_ws_xml(idx, opts, wb) {
     o[sidx] = o[sidx].replace("/>", ">");
   }
 
+	if(ws['!autofilter'] != null) o[o.length] = write_ws_xml_autofilter(ws['!autofilter']);
   if (ws['!merges'] !== undefined && ws['!merges'].length > 0) o[o.length] = (write_ws_xml_merges(ws['!merges']));
 
   if (ws['!pageSetup'] !== undefined) o[o.length] = write_ws_xml_pagesetup(ws['!pageSetup']);
@@ -8362,6 +8371,15 @@ function write_CELLTABLE(ba, ws, idx, opts, wb) {
 	write_record(ba, 'BrtEndSheetData');
 }
 
+function write_AUTOFILTER(ba, ws) {
+	if(!ws['!autofilter']) return;
+	write_record(ba, "BrtBeginAFilter", write_UncheckedRfX(decode_range(ws['!autofilter'].ref)));
+	/* *FILTERCOLUMN */
+	/* [SORTSTATE] */
+	/* BrtEndAFilter */
+	write_record(ba, "BrtEndAFilter");
+}
+
 function write_ws_bin(idx, opts, wb) {
 	var ba = buf_array();
 	var s = wb.SheetNames[idx], ws = wb.Sheets[s] || {};
@@ -8378,6 +8396,7 @@ function write_ws_bin(idx, opts, wb) {
 	/* *([BrtRangeProtectionIso] BrtRangeProtection) */
 	/* [SCENMAN] */
 	/* [AUTOFILTER] */
+	write_AUTOFILTER(ba, ws);
 	/* [SORTSTATE] */
 	/* [DCON] */
 	/* [USERSHVIEWS] */
@@ -8651,7 +8670,7 @@ function write_wb_xml(wb, opts) {
     var sheet = wb.Sheets[sheetName]
     if (sheet['!printHeader']) {
       if (sheet['!printHeader'].length !== 2) {
-        throw "!printHeaders must be an array of length 2: "+sheet['!printHeader'];
+	 throw "!printHeaders must be an array of length 2: "+sheet['!printHeader'];
 
       }
       hasPrintHeaders = true;
@@ -8665,22 +8684,22 @@ function write_wb_xml(wb, opts) {
       var sheetName = wb.SheetNames[i];
       var sheet = wb.Sheets[sheetName]
       if (sheet['!printHeader'] || sheet['!printColumns']) {
-          var printHeader = sheet['!printHeader'];
-          var printColumns = sheet['!printColumns'];
+	   var printHeader = sheet['!printHeader'];
+	   var printColumns = sheet['!printColumns'];
 
-        //Sheet1!$A:$C,Sheet1!$1:$1
-        var range = "";
+	 //Sheet1!$A:$C,Sheet1!$1:$1
+	 var range = "";
 
-        if (printColumns)  range += ("'" + sheetName + "'!")  + ("$" + printColumns[0] + ":$" + printColumns[1]);
-        if (printColumns && printHeader)  range += ","
-        if (printHeader) range += ("'" + sheetName + "'!" ) +  ("$" + printHeader[0] + ":$" + printHeader[1]);
+	 if (printColumns)  range += ("'" + sheetName + "'!")  + ("$" + printColumns[0] + ":$" + printColumns[1]);
+	 if (printColumns && printHeader)  range += ","
+	 if (printHeader) range += ("'" + sheetName + "'!" ) +  ("$" + printHeader[0] + ":$" + printHeader[1]);
 
-        console.log("-----------------------------")
-        console.log(range)
-        o[o.length] = (writextag('definedName', range, {
-          "name":"_xlnm.Print_Titles",
-          localSheetId : ''+i
-        }))
+	 console.log("-----------------------------")
+	 console.log(range)
+	 o[o.length] = (writextag('definedName', range, {
+	   "name":"_xlnm.Print_Titles",
+	   localSheetId : ''+i
+	 }))
       }
     }
     o[o.length] = '</definedNames>';
@@ -11854,12 +11873,15 @@ function readFileSync(data, opts) {
 }
 function write_zip_type(wb, opts) {
 	var o = opts||{};
-  style_builder  = new StyleBuilder(opts);
-
-  var z = write_zip(wb, o);
+	style_builder  = new StyleBuilder(opts);
+	
+	var z = write_zip(wb, o);
 	switch(o.type) {
 		case "base64": return z.generate({type:"base64"});
-		case "binary": return z.generate({type:"string"});
+		case "binary": 
+			outOpt = {type:"string"}
+			if(o.compression) outOpt.compression = 'DEFLATE';
+			return z.generate(outOpt);
 		case "buffer": return z.generate({type:"nodebuffer"});
 		case "file": return _fs.writeFileSync(o.file, z.generate({type:"nodebuffer"}));
 		default: throw new Error("Unrecognized type " + o.type);
@@ -12142,7 +12164,7 @@ var XmlNode = (function () {
     }
     if (typeof attr == 'object' && arguments.length == 1) {
       for (var key in attr) {
-        this._attributes[key] = attr[key];
+	 this._attributes[key] = attr[key];
       }
     }
     else if (arguments.length == 2 && typeof attr == 'string') {
@@ -12167,13 +12189,13 @@ var XmlNode = (function () {
     xml += '<' + node.tagName;
     if (node._attributes) {
       for (var key in node._attributes) {
-        xml += ' ' + key + '=' + this.escapeAttributeValue(''+node._attributes[key]) + ''
+	 xml += ' ' + key + '=' + this.escapeAttributeValue(''+node._attributes[key]) + ''
       }
     }
     if (node._children && node._children.length > 0) {
       xml += ">";
       for (var i = 0; i < node._children.length; i++) {
-        xml += this.toXml(node._children[i]);
+	 xml += this.toXml(node._children[i]);
       }
       xml += '</' + node.tagName + '>';
     }
@@ -12237,108 +12259,108 @@ var XmlNode = (function () {
 
       initialize: function (options) {
 
-        this.$fonts = XmlNode('fonts').attr('count',0).attr("x14ac:knownFonts","1");
-        this.$fills = XmlNode('fills').attr('count',0);
-        this.$borders = XmlNode('borders').attr('count',0);
-        this.$numFmts = XmlNode('numFmts').attr('count',0);
-        this.$cellStyleXfs = XmlNode('cellStyleXfs');
-        this.$xf = XmlNode('xf')
-            .attr('numFmtId', 0)
-            .attr('fontId', 0)
-            .attr('fillId', 0)
-            .attr('borderId', 0);
+	 this.$fonts = XmlNode('fonts').attr('count',0).attr("x14ac:knownFonts","1");
+	 this.$fills = XmlNode('fills').attr('count',0);
+	 this.$borders = XmlNode('borders').attr('count',0);
+	 this.$numFmts = XmlNode('numFmts').attr('count',0);
+	 this.$cellStyleXfs = XmlNode('cellStyleXfs');
+	 this.$xf = XmlNode('xf')
+	     .attr('numFmtId', 0)
+	     .attr('fontId', 0)
+	     .attr('fillId', 0)
+	     .attr('borderId', 0);
 
-        this.$cellXfs = XmlNode('cellXfs').attr('count',0);
-        this.$cellStyles = XmlNode('cellStyles')
-            .append(XmlNode('cellStyle')
-                .attr('name', 'Normal')
-                .attr('xfId',0)
-                .attr('builtinId',0)
-            );
-        this.$dxfs = XmlNode('dxfs').attr('count', "0");
-        this.$tableStyles = XmlNode('tableStyles')
-            .attr('count','0')
-            .attr('defaultTableStyle','TableStyleMedium9')
-            .attr('defaultPivotStyle','PivotStyleMedium4')
-
-
-        this.$styles = XmlNode('styleSheet')
-            .attr('xmlns:mc','http://schemas.openxmlformats.org/markup-compatibility/2006')
-            .attr('xmlns:x14ac','http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac')
-            .attr('xmlns','http://schemas.openxmlformats.org/spreadsheetml/2006/main')
-            .attr('mc:Ignorable','x14ac')
-            .prefix('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
-            .append(this.$numFmts)
-            .append(this.$fonts)
-            .append(this.$fills)
-            .append(this.$borders)
-            .append(this.$cellStyleXfs.append(this.$xf))
-            .append(this.$cellXfs)
-            .append(this.$cellStyles)
-            .append(this.$dxfs)
-            .append(this.$tableStyles);
+	 this.$cellXfs = XmlNode('cellXfs').attr('count',0);
+	 this.$cellStyles = XmlNode('cellStyles')
+	     .append(XmlNode('cellStyle')
+		  .attr('name', 'Normal')
+		  .attr('xfId',0)
+		  .attr('builtinId',0)
+	     );
+	 this.$dxfs = XmlNode('dxfs').attr('count', "0");
+	 this.$tableStyles = XmlNode('tableStyles')
+	     .attr('count','0')
+	     .attr('defaultTableStyle','TableStyleMedium9')
+	     .attr('defaultPivotStyle','PivotStyleMedium4')
 
 
-        // need to specify styles at index 0 and 1.
-        // the second style MUST be gray125 for some reason
+	 this.$styles = XmlNode('styleSheet')
+	     .attr('xmlns:mc','http://schemas.openxmlformats.org/markup-compatibility/2006')
+	     .attr('xmlns:x14ac','http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac')
+	     .attr('xmlns','http://schemas.openxmlformats.org/spreadsheetml/2006/main')
+	     .attr('mc:Ignorable','x14ac')
+	     .prefix('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
+	     .append(this.$numFmts)
+	     .append(this.$fonts)
+	     .append(this.$fills)
+	     .append(this.$borders)
+	     .append(this.$cellStyleXfs.append(this.$xf))
+	     .append(this.$cellXfs)
+	     .append(this.$cellStyles)
+	     .append(this.$dxfs)
+	     .append(this.$tableStyles);
 
-        var defaultStyle = options.defaultCellStyle || {};
-        if (!defaultStyle.font) defaultStyle.font = {name: 'Calibri', sz: '12'};
-        if (!defaultStyle.font.name) defaultStyle.font.name = 'Calibri';
-        if (!defaultStyle.font.sz) defaultStyle.font.sz = 11;
-        if (!defaultStyle.fill) defaultStyle.fill = {  patternType: "none", fgColor: {}};
-        if (!defaultStyle.border) defaultStyle.border = {};
-        if (!defaultStyle.numFmt) defaultStyle.numFmt = 0;
 
-        this.defaultStyle = defaultStyle;
+	 // need to specify styles at index 0 and 1.
+	 // the second style MUST be gray125 for some reason
 
-        var gray125Style = JSON.parse(JSON.stringify(defaultStyle));
-        gray125Style.fill = {patternType: "gray125", fgColor: { }}
+	 var defaultStyle = options.defaultCellStyle || {};
+	 if (!defaultStyle.font) defaultStyle.font = {name: 'Calibri', sz: '12'};
+	 if (!defaultStyle.font.name) defaultStyle.font.name = 'Calibri';
+	 if (!defaultStyle.font.sz) defaultStyle.font.sz = 11;
+	 if (!defaultStyle.fill) defaultStyle.fill = {  patternType: "none", fgColor: {}};
+	 if (!defaultStyle.border) defaultStyle.border = {};
+	 if (!defaultStyle.numFmt) defaultStyle.numFmt = 0;
 
-        this.addStyles([defaultStyle, gray125Style]);
-        return this;
+	 this.defaultStyle = defaultStyle;
+
+	 var gray125Style = JSON.parse(JSON.stringify(defaultStyle));
+	 gray125Style.fill = {patternType: "gray125", fgColor: { }}
+
+	 this.addStyles([defaultStyle, gray125Style]);
+	 return this;
       },
 
       // create a style entry and returns an integer index that can be used in the cell .s property
       // these format of this object follows the emerging Common Spreadsheet Format
       addStyle: function (attributes) {
 
-        var hashKey = JSON.stringify(attributes);
-        var index = _hashIndex[hashKey];
-        if (index == undefined) {
+	 var hashKey = JSON.stringify(attributes);
+	 var index = _hashIndex[hashKey];
+	 if (index == undefined) {
 
-          index = this._addXf(attributes); //_listIndex.push(attributes) -1;
-          _hashIndex[hashKey] = index;
-        }
-        else {
-          index = _hashIndex[hashKey];
-        }
-        return index;
+	   index = this._addXf(attributes); //_listIndex.push(attributes) -1;
+	   _hashIndex[hashKey] = index;
+	 }
+	 else {
+	   index = _hashIndex[hashKey];
+	 }
+	 return index;
       },
 
       // create style entries and returns array of integer indexes that can be used in cell .s property
       addStyles: function (styles) {
-        var self = this;
-        return styles.map(function (style) {
-          return self.addStyle(style);
-        })
+	 var self = this;
+	 return styles.map(function (style) {
+	   return self.addStyle(style);
+	 })
       },
 
       _duckTypeStyle: function(attributes) {
 
-        if (typeof attributes == 'object' && (attributes.patternFill || attributes.fgColor)) {
-          return {fill: attributes }; // this must be read via XLSX.parseFile(...)
-        }
-        else if (attributes.font || attributes.numFmt || attributes.border || attributes.fill) {
-          return attributes;
-        }
-        else {
-          return this._getStyleCSS(attributes)
-        }
+	 if (typeof attributes == 'object' && (attributes.patternFill || attributes.fgColor)) {
+	   return {fill: attributes }; // this must be read via XLSX.parseFile(...)
+	 }
+	 else if (attributes.font || attributes.numFmt || attributes.border || attributes.fill) {
+	   return attributes;
+	 }
+	 else {
+	   return this._getStyleCSS(attributes)
+	 }
       },
 
       _getStyleCSS: function(css) {
-        return css; //TODO
+	 return css; //TODO
       },
 
       // Create an <xf> record for the style as well as corresponding <font>, <fill>, <border>, <numfmts>
@@ -12347,216 +12369,216 @@ var XmlNode = (function () {
       _addXf: function (attributes) {
 
 
-        var fontId = this._addFont(attributes.font);
-        var fillId = this._addFill(attributes.fill);
-        var borderId = this._addBorder(attributes.border);
-        var numFmtId = this._addNumFmt(attributes.numFmt);
+	 var fontId = this._addFont(attributes.font);
+	 var fillId = this._addFill(attributes.fill);
+	 var borderId = this._addBorder(attributes.border);
+	 var numFmtId = this._addNumFmt(attributes.numFmt);
 
-        var $xf = XmlNode('xf')
-            .attr("numFmtId", numFmtId)
-            .attr("fontId", fontId)
-            .attr("fillId", fillId)
-            .attr("borderId", borderId)
-            .attr("xfId", "0");
+	 var $xf = XmlNode('xf')
+	     .attr("numFmtId", numFmtId)
+	     .attr("fontId", fontId)
+	     .attr("fillId", fillId)
+	     .attr("borderId", borderId)
+	     .attr("xfId", "0");
 
-        if (fontId > 0) {
-          $xf.attr('applyFont', "1");
-        }
-        if (fillId > 0) {
-          $xf.attr('applyFill', "1");
-        }
-        if (borderId > 0) {
-          $xf.attr('applyBorder', "1");
-        }
-        if (numFmtId > 0) {
-          $xf.attr('applyNumberFormat', "1");
-        }
+	 if (fontId > 0) {
+	   $xf.attr('applyFont', "1");
+	 }
+	 if (fillId > 0) {
+	   $xf.attr('applyFill', "1");
+	 }
+	 if (borderId > 0) {
+	   $xf.attr('applyBorder', "1");
+	 }
+	 if (numFmtId > 0) {
+	   $xf.attr('applyNumberFormat', "1");
+	 }
 
-        if (attributes.alignment) {
-          var $alignment = XmlNode('alignment');
-          if (attributes.alignment.horizontal) { $alignment.attr('horizontal', attributes.alignment.horizontal);}
-          if (attributes.alignment.vertical)  { $alignment.attr('vertical', attributes.alignment.vertical);}
-          if (attributes.alignment.indent)  { $alignment.attr('indent', attributes.alignment.indent);}
-          if (attributes.alignment.readingOrder)  { $alignment.attr('readingOrder', attributes.alignment.readingOrder);}
-          if (attributes.alignment.wrapText)  { $alignment.attr('wrapText', attributes.alignment.wrapText);}
-          if (attributes.alignment.textRotation!=undefined)  { $alignment.attr('textRotation', attributes.alignment.textRotation);}
+	 if (attributes.alignment) {
+	   var $alignment = XmlNode('alignment');
+	   if (attributes.alignment.horizontal) { $alignment.attr('horizontal', attributes.alignment.horizontal);}
+	   if (attributes.alignment.vertical)  { $alignment.attr('vertical', attributes.alignment.vertical);}
+	   if (attributes.alignment.indent)  { $alignment.attr('indent', attributes.alignment.indent);}
+	   if (attributes.alignment.readingOrder)  { $alignment.attr('readingOrder', attributes.alignment.readingOrder);}
+	   if (attributes.alignment.wrapText)  { $alignment.attr('wrapText', attributes.alignment.wrapText);}
+	   if (attributes.alignment.textRotation!=undefined)  { $alignment.attr('textRotation', attributes.alignment.textRotation);}
 
-          $xf.append($alignment).attr('applyAlignment',1)
+	   $xf.append($alignment).attr('applyAlignment',1)
 
-        }
-        this.$cellXfs.append($xf);
-        var count = +this.$cellXfs.children().length;
+	 }
+	 this.$cellXfs.append($xf);
+	 var count = +this.$cellXfs.children().length;
 
-        this.$cellXfs.attr('count', count);
-        return count - 1;
+	 this.$cellXfs.attr('count', count);
+	 return count - 1;
       },
 
       _addFont: function (attributes) {
 
-        if (!attributes) {  return 0; }
+	 if (!attributes) {  return 0; }
 
-        var $font = XmlNode('font')
-            .append(XmlNode('sz').attr('val', attributes.sz || this.defaultStyle.font.sz))
-            .append(XmlNode('name').attr('val', attributes.name || this.defaultStyle.font.name))
+	 var $font = XmlNode('font')
+	     .append(XmlNode('sz').attr('val', attributes.sz || this.defaultStyle.font.sz))
+	     .append(XmlNode('name').attr('val', attributes.name || this.defaultStyle.font.name))
 
-        if (attributes.bold) $font.append(XmlNode('b'));
-        if (attributes.underline)  $font.append(XmlNode('u'));
-        if (attributes.italic)  $font.append(XmlNode('i'));
-        if (attributes.strike)  $font.append(XmlNode('strike'));
-        if (attributes.outline)  $font.append(XmlNode('outline'));
-        if (attributes.shadow)  $font.append(XmlNode('shadow'));
+	 if (attributes.bold) $font.append(XmlNode('b'));
+	 if (attributes.underline)  $font.append(XmlNode('u'));
+	 if (attributes.italic)  $font.append(XmlNode('i'));
+	 if (attributes.strike)  $font.append(XmlNode('strike'));
+	 if (attributes.outline)  $font.append(XmlNode('outline'));
+	 if (attributes.shadow)  $font.append(XmlNode('shadow'));
 
-        if (attributes.vertAlign) {
-          $font.append(XmlNode('vertAlign').attr('val', attributes.vertAlign))
-        }
+	 if (attributes.vertAlign) {
+	   $font.append(XmlNode('vertAlign').attr('val', attributes.vertAlign))
+	 }
 
 
-        if (attributes.color) {
-          if (attributes.color.theme) {
-            $font.append(XmlNode('color').attr('theme', attributes.color.theme))
+	 if (attributes.color) {
+	   if (attributes.color.theme) {
+	     $font.append(XmlNode('color').attr('theme', attributes.color.theme))
 
-            if (attributes.color.tint) { //tint only if theme
-              $font.append(XmlNode('tint').attr('theme', attributes.color.tint))
-            }
+	     if (attributes.color.tint) { //tint only if theme
+		$font.append(XmlNode('tint').attr('theme', attributes.color.tint))
+	     }
 
-          } else if (attributes.color.rgb) { // not both rgb and theme
-            $font.append(XmlNode('color').attr('rgb', attributes.color.rgb))
-          }
-        }
+	   } else if (attributes.color.rgb) { // not both rgb and theme
+	     $font.append(XmlNode('color').attr('rgb', attributes.color.rgb))
+	   }
+	 }
 
-        this.$fonts.append($font);
+	 this.$fonts.append($font);
 
-        var count = this.$fonts.children().length;
-        this.$fonts.attr('count', count);
-        return count - 1;
+	 var count = this.$fonts.children().length;
+	 this.$fonts.attr('count', count);
+	 return count - 1;
       },
 
-        _addNumFmt: function (numFmt) {
-        if (!numFmt) { return 0; }
+	 _addNumFmt: function (numFmt) {
+	 if (!numFmt) { return 0; }
 
-        if (typeof numFmt == 'string') {
-          var numFmtIdx = fmt_table[numFmt];
-          if (numFmtIdx >= 0) {
-            return numFmtIdx; // we found a match against built in formats
-          }
-        }
+	 if (typeof numFmt == 'string') {
+	   var numFmtIdx = fmt_table[numFmt];
+	   if (numFmtIdx >= 0) {
+	     return numFmtIdx; // we found a match against built in formats
+	   }
+	 }
 
-        if (/^[0-9]+$/.exec(numFmt)) {
-          return numFmt; // we're matching an integer against some known code
-        }
-        numFmt = numFmt
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&apos;');
+	 if (/^[0-9]+$/.exec(numFmt)) {
+	   return numFmt; // we're matching an integer against some known code
+	 }
+	 numFmt = numFmt
+	     .replace(/&/g, '&amp;')
+	     .replace(/</g, '&lt;')
+	     .replace(/>/g, '&gt;')
+	     .replace(/"/g, '&quot;')
+	     .replace(/'/g, '&apos;');
 
-        var $numFmt = XmlNode('numFmt')
-            .attr('numFmtId', (++customNumFmtId))
-            .attr('formatCode', numFmt);
+	 var $numFmt = XmlNode('numFmt')
+	     .attr('numFmtId', (++customNumFmtId))
+	     .attr('formatCode', numFmt);
 
-        this.$numFmts.append($numFmt);
+	 this.$numFmts.append($numFmt);
 
-        var count = this.$numFmts.children().length;
-        this.$numFmts.attr('count', count);
-        return customNumFmtId ;
+	 var count = this.$numFmts.children().length;
+	 this.$numFmts.attr('count', count);
+	 return customNumFmtId ;
       },
 
       _addFill: function (attributes) {
 
-        if (!attributes) { return 0; }
+	 if (!attributes) { return 0; }
 
-        var $patternFill = XmlNode('patternFill')
-            .attr('patternType', attributes.patternType || 'solid');
+	 var $patternFill = XmlNode('patternFill')
+	     .attr('patternType', attributes.patternType || 'solid');
 
-        if (attributes.fgColor) {
-          var $fgColor = XmlNode('fgColor');
+	 if (attributes.fgColor) {
+	   var $fgColor = XmlNode('fgColor');
 
-          //Excel doesn't like it when we set both rgb and theme+tint, but xlsx.parseFile() sets both
-          //var $fgColor = createElement('<fgColor/>', null, null, {xmlMode: true}).attr(attributes.fgColor)
-          if (attributes.fgColor.rgb) {
+	   //Excel doesn't like it when we set both rgb and theme+tint, but xlsx.parseFile() sets both
+	   //var $fgColor = createElement('<fgColor/>', null, null, {xmlMode: true}).attr(attributes.fgColor)
+	   if (attributes.fgColor.rgb) {
 
-            if (attributes.fgColor.rgb.length == 6) {
-              attributes.fgColor.rgb = "FF" + attributes.fgColor.rgb /// add alpha to an RGB as Excel expects aRGB
-            }
+	     if (attributes.fgColor.rgb.length == 6) {
+		attributes.fgColor.rgb = "FF" + attributes.fgColor.rgb /// add alpha to an RGB as Excel expects aRGB
+	     }
 
-            $fgColor.attr('rgb', attributes.fgColor.rgb);
-            $patternFill.append($fgColor);
-          }
-          else if (attributes.fgColor.theme) {
-            $fgColor.attr('theme', attributes.fgColor.theme);
-            if (attributes.fgColor.tint) {
-              $fgColor.attr('tint', attributes.fgColor.tint);
-            }
-            $patternFill.append($fgColor);
-          }
+	     $fgColor.attr('rgb', attributes.fgColor.rgb);
+	     $patternFill.append($fgColor);
+	   }
+	   else if (attributes.fgColor.theme) {
+	     $fgColor.attr('theme', attributes.fgColor.theme);
+	     if (attributes.fgColor.tint) {
+		$fgColor.attr('tint', attributes.fgColor.tint);
+	     }
+	     $patternFill.append($fgColor);
+	   }
 
-          if (!attributes.bgColor) {
-            attributes.bgColor = { "indexed": "64"}
-          }
-        }
+	   if (!attributes.bgColor) {
+	     attributes.bgColor = { "indexed": "64"}
+	   }
+	 }
 
-        if (attributes.bgColor) {
-          var $bgColor = XmlNode('bgColor').attr(attributes.bgColor);
-          $patternFill.append($bgColor);
-        }
+	 if (attributes.bgColor) {
+	   var $bgColor = XmlNode('bgColor').attr(attributes.bgColor);
+	   $patternFill.append($bgColor);
+	 }
 
-        var $fill = XmlNode('fill')
-            .append($patternFill);
+	 var $fill = XmlNode('fill')
+	     .append($patternFill);
 
-        this.$fills.append($fill);
+	 this.$fills.append($fill);
 
-        var count = this.$fills.children().length;
-        this.$fills.attr('count', count);
-        return count - 1;
+	 var count = this.$fills.children().length;
+	 this.$fills.attr('count', count);
+	 return count - 1;
       },
 
       _getSubBorder: function(direction, spec) {
 
-        var $direction = XmlNode(direction);
-        if (spec){
-          if (spec.style) $direction.attr('style', spec.style);
-          if (spec.color) {
-            var $color = XmlNode('color');
-            if (spec.color.auto) {
-              $color.attr('auto', spec.color.auto);
-            }
-            else if (spec.color.rgb) {
-              $color.attr('rgb', spec.color.rgb);
-            }
-            else if (spec.color.theme || spec.color.tint) {
-              $color.attr('theme', spec.color.theme || "1");
-              $color.attr('tint', spec.color.tint || "0");
-            }
-            $direction.append($color)
-          }
-        }
-        return $direction;
+	 var $direction = XmlNode(direction);
+	 if (spec){
+	   if (spec.style) $direction.attr('style', spec.style);
+	   if (spec.color) {
+	     var $color = XmlNode('color');
+	     if (spec.color.auto) {
+		$color.attr('auto', spec.color.auto);
+	     }
+	     else if (spec.color.rgb) {
+		$color.attr('rgb', spec.color.rgb);
+	     }
+	     else if (spec.color.theme || spec.color.tint) {
+		$color.attr('theme', spec.color.theme || "1");
+		$color.attr('tint', spec.color.tint || "0");
+	     }
+	     $direction.append($color)
+	   }
+	 }
+	 return $direction;
       },
 
       _addBorder: function (attributes) {
-        if (!attributes) { return 0; }
+	 if (!attributes) { return 0; }
 
-        var self = this;
+	 var self = this;
 
-        var $border = XmlNode('border')
-            .attr("diagonalUp",attributes.diagonalUp)
-            .attr("diagonalDown",attributes.diagonalDown);
+	 var $border = XmlNode('border')
+	     .attr("diagonalUp",attributes.diagonalUp)
+	     .attr("diagonalDown",attributes.diagonalDown);
 
-        var directions = ["left","right","top","bottom","diagonal"];
+	 var directions = ["left","right","top","bottom","diagonal"];
 
-        directions.forEach(function(direction) {
-          $border.append(self._getSubBorder(direction, attributes[direction]))
-        });
-        this.$borders.append($border);
+	 directions.forEach(function(direction) {
+	   $border.append(self._getSubBorder(direction, attributes[direction]))
+	 });
+	 this.$borders.append($border);
 
-        var count = this.$borders.children().length;
-        this.$borders.attr('count', count);
-        return count -1;
+	 var count = this.$borders.children().length;
+	 this.$borders.attr('count', count);
+	 return count -1;
       },
 
       toXml: function () {
-        return this.$styles.toXml();
+	 return this.$styles.toXml();
       }
     }.initialize(options||{});
   }
